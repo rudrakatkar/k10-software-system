@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Esri Map</title>
+
+  <link rel="stylesheet"
+        href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.29/"></script>
+
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+<div id="viewDiv"></div>
+
+<script>
+require([
+  "esri/Map",
+  "esri/views/MapView",
+  "esri/Graphic",
+  "esri/layers/GraphicsLayer"
+], function(Map, MapView, Graphic, GraphicsLayer) {
+
+  const pathLayer = new GraphicsLayer();
+  const droneLayer = new GraphicsLayer();
+
+  const map = new Map({
+    basemap: "satellite",
+    layers: [pathLayer, droneLayer]
+  });
+
+  const view = new MapView({
+    container: "viewDiv",
+    map: map,
+    center: [72.8777, 19.0760], // Mumbai
+    zoom: 15
+  });
+
+  let pathPoints = [];
+
+  window.updateDronePosition = function(lat, lon) {
+    const point = {
+      type: "point",
+      longitude: lon,
+      latitude: lat
+    };
+
+    pathPoints.push(point);
+
+    droneLayer.removeAll();
+    pathLayer.removeAll();
+
+    droneLayer.add(new Graphic({
+      geometry: point,
+      symbol: {
+        type: "simple-marker",
+        color: "red",
+        size: "10px"
+      }
+    }));
+
+    if (pathPoints.length > 1) {
+      pathLayer.add(new Graphic({
+        geometry: {
+          type: "polyline",
+          paths: [pathPoints.map(p => [p.longitude, p.latitude])]
+        },
+        symbol: {
+          type: "simple-line",
+          color: "cyan",
+          width: 2
+        }
+      }));
+    }
+
+    view.center = [lon, lat];
+  };
+});
+</script>
+</body>
+</html>
