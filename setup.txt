@@ -4,3 +4,14 @@
     cd map 
     python3 -m http.server 8000
 4. run python main.py
+
+Working library versions: 
+
+PySide6-6.10.2 
+PySide6_Addons-6.10.2 
+PySide6_Essentials-6.10.2 
+opencv-python-4.13.0.92 
+polars-1.38.1
+polars-runtime-32-1.38.1 
+shiboken6-6.10.2 
+ultralytics-8.4.14 
