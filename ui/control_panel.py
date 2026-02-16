@@ -92,9 +92,6 @@ class ControlPanel(Card):
         """)
         upload_btn.clicked.connect(self.upload_clicked.emit)
 
-        ai_toggle = ToggleButton("AI Mode")
-        ai_toggle.toggled_signal.connect(self.ai_toggled.emit)
-
         self.camera_select = QComboBox()
         self.camera_select.addItems([
             'Integrated Camera (ID 0)',
@@ -136,4 +133,3 @@ class ControlPanel(Card):
         layout.addStretch()
         layout.addWidget(self.camera_select)
         layout.addWidget(upload_btn)
-        layout.addWidget(ai_toggle)

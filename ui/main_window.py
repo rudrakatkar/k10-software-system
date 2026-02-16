@@ -59,7 +59,7 @@ class MainWindow(QMainWindow):
         self.worker.telemetry_signal.connect(self.telemetry.update)
         self.worker.telemetry_signal.connect(self.map_view.update_position)
 
-        self.controls.ai_toggled.connect(self.worker.enable_ai)
+        self.video.ai_toggled.connect(self.worker.enable_ai)
         self.controls.upload_clicked.connect(self.open_video_file)
         self.controls.camera_select.currentIndexChanged.connect(self.switch_camera)
 
