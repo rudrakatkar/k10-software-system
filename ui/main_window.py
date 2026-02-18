@@ -21,18 +21,15 @@ class MainWindow(QMainWindow):
         self.resize(1700, 950)
         self.setWindowTitle("Drone GCS")
 
-        # ---- Central widget ----
         central = QWidget()
         self.setCentralWidget(central)
 
-        # ---- UI components (CREATE FIRST) ----
         self.status = StatusBar()
         self.video = VideoWidget()
         self.telemetry = TelemetryPanel()
         self.controls = ControlPanel()
         self.map_view = MapWidget()
 
-        # ---- Layouts ----
         left = QVBoxLayout()
         left.addWidget(self.video, 6)
         left.addWidget(self.telemetry, 3)
@@ -51,19 +48,19 @@ class MainWindow(QMainWindow):
 
         central.setLayout(layout)
 
-        # ---- Worker ----
-        self.worker = VideoWorker(device_id=0)
+        # 🔥 DEFAULT CAMERA INDEX = 1
+        self.worker = VideoWorker(device_id=1)
 
-        # ---- Signals ----
+        # ---- SIGNALS ----
         self.worker.frame_signal.connect(self.video.update_frame)
         self.worker.telemetry_signal.connect(self.telemetry.update)
         self.worker.telemetry_signal.connect(self.map_view.update_position)
 
-        self.video.ai_toggled.connect(self.worker.enable_ai)
+        self.controls.start_clicked.connect(self.worker.start_stream)
+        self.controls.stop_clicked.connect(self.worker.stop_stream)
         self.controls.upload_clicked.connect(self.open_video_file)
-        self.controls.camera_select.currentIndexChanged.connect(self.switch_camera)
-
-        self.worker.start()
+        self.controls.camera_changed.connect(self.worker.change_camera)
+        self.video.ai_toggled.connect(self.worker.enable_ai)
 
     def open_video_file(self):
         file_path, _ = QFileDialog.getOpenFileName(
@@ -74,9 +71,4 @@ class MainWindow(QMainWindow):
         )
 
         if file_path:
-            print(f"[INFO] Loading video: {file_path}")
             self.worker.open_video_file(file_path)
-
-    def switch_camera(self, index):
-        """Switch to a different camera device"""
-        self.worker.change_camera(index)

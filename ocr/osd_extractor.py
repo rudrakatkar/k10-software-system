@@ -128,12 +128,22 @@ def preprocess(img):
 def extract_osd(frame):
 
     data = {}
+    h, w = frame.shape[:2]
 
     # -------------------------
     # YOUR FIXED PIXEL ROIs
     # -------------------------
-    lat_roi = frame[1:55, 1477:1854]
-    lon_roi = frame[0:55, 107:475]
+    # LAT = top-right 25% width, 6% height
+    lat_roi = frame[
+        int(0.01 * h): int(0.06 * h),
+        int(0.70 * w): int(0.97 * w)
+    ]
+
+    # LON = top-left 25% width, 6% height
+    lon_roi = frame[
+        int(0.01 * h): int(0.06 * h),
+        int(0.03 * w): int(0.30 * w)
+    ]
 
     lat_img = preprocess(lat_roi)
     lon_img = preprocess(lon_roi)

@@ -98,4 +98,5 @@ class VideoWidget(Card):
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         h, w, ch = rgb.shape
         img = QImage(rgb.data, w, h, ch * w, QImage.Format_RGB888)
+        print("Frame received")
         self.label.setPixmap(QPixmap.fromImage(img))
